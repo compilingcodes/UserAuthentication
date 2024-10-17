@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { StatusCodes } = require("http-status-codes");
 const { connectDb } = require("./db/config");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -16,6 +17,9 @@ app.use(express.json());
 //cors call
 
 app.use(cors());
+
+//cookies => (secured) signed cookies
+app.use(cookieParser(process.env.SECRET));
 
 //index route
 
@@ -39,12 +43,12 @@ app.all(`*`, async (req, res) => {
 //listener
 
 app.listen(PORT, () => {
-  if(process.env.MODE=== "production"){
-    connectDb(process.env.MONGO_PROD)
+  if (process.env.MODE === "production") {
+    connectDb(process.env.MONGO_PROD);
   }
 
-  if(process.env.MODE=== "development"){
-    connectDb(process.env.MONGO_DEV)
+  if (process.env.MODE === "development") {
+    connectDb(process.env.MONGO_DEV);
   }
   console.log(`server is statrted and running at @http://localhost:${PORT}`);
 });
